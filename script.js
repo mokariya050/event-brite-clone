@@ -1,31 +1,36 @@
 // ============================================================
-//  EVENTBRITE CLONE — script.js  (single combined script)
+//  EVENTBRITE CLONE — script.js
 //  Sections:
-//    1. Header — mobile menu, dropdowns, search, scroll shadow
-//    2. Hero categories — active pill
-//    3. Middle — event tab switching, destinations carousel
-//    4. Footer — city/state chips, drag-scroll, country picker
+//    1. Header  (menu, dropdown, search, scroll shadow)
+//    2. Categories  (active pill)
+//    3. Event tabs  (active state)
+//    4. Destinations carousel  (prev/next scroll)
+//    5. Footer  (chips, drag-scroll, country picker, year)
+//    6. Sign-in modal  (open/close, 2-step email → password)
+//    7. Sign-in standalone page  (signin.html same flow)
 // ============================================================
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* ==============================================================
+  // Shortcut helper
+  function $(id) { return document.getElementById(id); }
+
+
+  /* ============================================================
      1. HEADER
-     ============================================================== */
+     ============================================================ */
 
-  // Mobile hamburger
-  const menuToggle = document.getElementById("menuToggle");
-  const nav        = document.getElementById("nav");
-
+  // Mobile hamburger toggle
+  var menuToggle = $("menuToggle");
+  var nav = $("nav");
   if (menuToggle && nav) {
-    menuToggle.addEventListener("click", () => {
-      const isOpen = nav.classList.toggle("open");
-      menuToggle.setAttribute("aria-expanded", isOpen);
+    menuToggle.addEventListener("click", function () {
+      var open = nav.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", open);
     });
-
-    // Close nav on any link click (mobile UX)
-    nav.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
+    // Close nav when any link is clicked (mobile UX)
+    nav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
         nav.classList.remove("open");
         menuToggle.setAttribute("aria-expanded", "false");
       });
@@ -33,58 +38,47 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Help Center dropdown
-  const helpBtn  = document.getElementById("helpBtn");
-  const helpMenu = document.getElementById("helpMenu");
-
+  var helpBtn  = $("helpBtn");
+  var helpMenu = $("helpMenu");
   if (helpBtn && helpMenu) {
-    helpBtn.addEventListener("click", (e) => {
+    helpBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      const isOpen = helpMenu.classList.toggle("open");
-      helpBtn.setAttribute("aria-expanded", isOpen);
+      var open = helpMenu.classList.toggle("open");
+      helpBtn.setAttribute("aria-expanded", open);
     });
   }
 
-  // Close all dropdowns on outside click
-  document.addEventListener("click", () => {
-    if (helpMenu) {
-      helpMenu.classList.remove("open");
-      if (helpBtn) helpBtn.setAttribute("aria-expanded", "false");
-    }
+  // Close dropdowns when clicking outside or pressing Escape
+  document.addEventListener("click", function () {
+    if (helpMenu) helpMenu.classList.remove("open");
+    if (helpBtn)  helpBtn.setAttribute("aria-expanded", "false");
   });
-
-  // Close all dropdowns + mobile nav on Escape
-  document.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape") return;
-    if (helpMenu) {
-      helpMenu.classList.remove("open");
-      if (helpBtn) helpBtn.setAttribute("aria-expanded", "false");
-    }
-    if (nav) {
-      nav.classList.remove("open");
-      if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
-    }
+    if (helpMenu) helpMenu.classList.remove("open");
+    if (nav)      nav.classList.remove("open");
+    if (helpBtn)  helpBtn.setAttribute("aria-expanded", "false");
+    if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+    closeSigninModal();
   });
 
-  // Search (demo — logs query to console)
-  const searchBtn   = document.getElementById("searchBtn");
-  const searchInput = document.getElementById("searchInput");
-  const locInput    = document.getElementById("locationInput");
-
+  // Search (logs to console — replace with real search later)
+  var searchBtn   = $("searchBtn");
+  var searchInput = $("searchInput");
+  var locInput    = $("locationInput");
   function runSearch() {
-    const q   = searchInput ? searchInput.value.trim() : "";
-    const loc = locInput    ? locInput.value.trim()    : "";
-    if (!q) return;
-    console.log("Search:", q, "| Location:", loc);
-    // Uncomment to navigate: window.location.href = `search.html?q=${encodeURIComponent(q)}&loc=${encodeURIComponent(loc)}`;
+    var q = searchInput ? searchInput.value.trim() : "";
+    if (q) console.log("Search:", q, "| Location:", locInput ? locInput.value : "");
   }
-
   if (searchBtn)  searchBtn.addEventListener("click", runSearch);
-  if (searchInput) searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") runSearch(); });
+  if (searchInput) searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") runSearch();
+  });
 
-  // Sticky header shadow on scroll
-  const header = document.querySelector(".header");
+  // Add shadow to sticky header on scroll
+  var header = document.querySelector(".header");
   if (header) {
-    window.addEventListener("scroll", () => {
+    window.addEventListener("scroll", function () {
       header.style.boxShadow = window.scrollY > 4
         ? "0 2px 12px rgba(30,10,60,0.09)"
         : "none";
@@ -92,317 +86,301 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
-  /* ==============================================================
-     2. HERO CATEGORIES — active pill
-     ============================================================== */
-  document.querySelectorAll(".category").forEach((cat) => {
-    cat.addEventListener("click", (e) => {
+  /* ============================================================
+     2. CATEGORIES — active pill on click
+     ============================================================ */
+  document.querySelectorAll(".category").forEach(function (cat) {
+    cat.addEventListener("click", function (e) {
       e.preventDefault();
-      document.querySelectorAll(".category").forEach((c) => c.classList.remove("active"));
+      document.querySelectorAll(".category").forEach(function (c) { c.classList.remove("active"); });
       cat.classList.add("active");
     });
   });
 
 
-  /* ==============================================================
-     3. MIDDLE SECTION
-     ============================================================== */
-
-  // ---- Event tab switching ----
-  const tabs = document.querySelectorAll(".tab");
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      tabs.forEach((t) => t.classList.remove("active"));
+  /* ============================================================
+     3. EVENT TABS — active state
+     ============================================================ */
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
       tab.classList.add("active");
-      // Add real event filtering here when you have live data
     });
   });
 
-  // ---- Destinations carousel ----
-  const grid    = document.getElementById("destinationsGrid");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
+
+  /* ============================================================
+     4. DESTINATIONS CAROUSEL — prev / next buttons
+     ============================================================ */
+  var grid    = $("destinationsGrid");
+  var prevBtn = $("prevBtn");
+  var nextBtn = $("nextBtn");
 
   if (grid && prevBtn && nextBtn) {
-    // One "page" = visible grid width + one gap so cards align perfectly
     function pageWidth() {
-      const gap = parseInt(getComputedStyle(grid).columnGap, 10) || 0;
+      var gap = parseInt(getComputedStyle(grid).columnGap, 10) || 0;
       return grid.clientWidth + gap;
     }
-
-    function updateCarouselButtons() {
+    function updateCarouselBtns() {
       prevBtn.disabled = grid.scrollLeft <= 2;
       nextBtn.disabled = grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 2;
     }
-
-    nextBtn.addEventListener("click", () => grid.scrollBy({ left:  pageWidth(), behavior: "smooth" }));
-    prevBtn.addEventListener("click", () => grid.scrollBy({ left: -pageWidth(), behavior: "smooth" }));
-
-    grid.addEventListener("scroll", updateCarouselButtons, { passive: true });
-    window.addEventListener("resize", updateCarouselButtons);
-    updateCarouselButtons();  // set initial disabled state
+    nextBtn.addEventListener("click", function () { grid.scrollBy({ left:  pageWidth(), behavior: "smooth" }); });
+    prevBtn.addEventListener("click", function () { grid.scrollBy({ left: -pageWidth(), behavior: "smooth" }); });
+    grid.addEventListener("scroll", updateCarouselBtns, { passive: true });
+    window.addEventListener("resize", updateCarouselBtns);
+    updateCarouselBtns();
   }
 
 
-  /* ==============================================================
-     4. FOOTER
-     ============================================================== */
+  /* ============================================================
+     5. FOOTER — chips, drag-scroll, country picker, year
+     ============================================================ */
 
-  const ARROW =
-    '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">' +
-    '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"' +
-    ' stroke-linejoin="round" d="M7 17L17 7M8 7h9v9"/></svg>';
+  // City & state chip data
+  var cities = ["Abilene", "Phoenix", "Albuquerque", "Anaheim", "Raleigh", "Wichita"];
+  var states1 = ["Alabama","Arizona","California","Connecticut","District of Columbia","Georgia","Idaho","Indiana","Kansas","Louisiana","Michigan","Minnesota"];
+  var states2 = ["Alaska","Arkansas","Colorado","Delaware","Florida","Hawaii","Illinois","Iowa","Kentucky","Maine","Massachusetts","Mississippi"];
 
-  const cities = ["Abilene", "Phoenix", "Albuquerque", "Anaheim", "Raleigh", "Wichita"];
-
-  const statesRow1 = [
-    "Alabama", "Arizona", "California", "Connecticut", "District of Columbia",
-    "Georgia", "Idaho", "Indiana", "Kansas", "Louisiana", "Michigan", "Minnesota"
-  ];
-  const statesRow2 = [
-    "Alaska", "Arkansas", "Colorado", "Delaware", "Florida", "Hawaii",
-    "Illinois", "Iowa", "Kentucky", "Maine", "Massachusetts", "Mississippi"
-  ];
+  var arrowSVG = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M8 7h9v9"/></svg>';
 
   function chip(text) {
-    return '<a href="#" class="ef__chip">' + text + ARROW + "</a>";
+    return '<a href="#" class="ef__chip">' + text + arrowSVG + '</a>';
   }
 
-  const citiesEl = document.getElementById("efCities");
-  const row1     = document.getElementById("efStatesRow1");
-  const row2     = document.getElementById("efStatesRow2");
+  var citiesEl = $("efCities");
+  var row1     = $("efStatesRow1");
+  var row2     = $("efStatesRow2");
 
-  // Only run footer code if footer elements are present
   if (citiesEl && row1 && row2) {
-    citiesEl.innerHTML = cities.map((c) => chip("Things to do in " + c)).join("");
-    row1.innerHTML     = statesRow1.map(chip).join("");
-    row2.innerHTML     = statesRow2.map(chip).join("");
+    citiesEl.innerHTML = cities.map(function (c) { return chip("Things to do in " + c); }).join("");
+    row1.innerHTML     = states1.map(chip).join("");
+    row2.innerHTML     = states2.map(chip).join("");
 
-    // Drag-to-scroll on state rows
-    const scroller = document.getElementById("efStates");
+    // Drag-to-scroll on the state rows
+    var scroller = $("efStates");
     if (scroller) {
-      let isDown = false, startX = 0, startLeft = 0, moved = false;
-
-      scroller.addEventListener("mousedown", (e) => {
+      var isDown = false, startX = 0, startLeft = 0, moved = false;
+      scroller.addEventListener("mousedown", function (e) {
         isDown = true; moved = false;
-        startX    = e.pageX;
-        startLeft = scroller.scrollLeft;
+        startX = e.pageX; startLeft = scroller.scrollLeft;
         scroller.classList.add("dragging");
       });
-      window.addEventListener("mouseup", () => {
+      window.addEventListener("mouseup", function () {
         isDown = false;
         scroller.classList.remove("dragging");
       });
-      window.addEventListener("mousemove", (e) => {
+      window.addEventListener("mousemove", function (e) {
         if (!isDown) return;
-        const dx = e.pageX - startX;
-        if (Math.abs(dx) > 4) moved = true;
-        scroller.scrollLeft = startLeft - dx;
+        if (Math.abs(e.pageX - startX) > 4) moved = true;
+        scroller.scrollLeft = startLeft - (e.pageX - startX);
       });
-      // Prevent link clicks while dragging
-      scroller.addEventListener("click", (e) => { if (moved) e.preventDefault(); }, true);
+      scroller.addEventListener("click", function (e) { if (moved) e.preventDefault(); }, true);
     }
   }
 
   // Country dropdown
-  const countryBtn   = document.getElementById("efCountryBtn");
-  const countryMenu  = document.getElementById("efCountryMenu");
-  const countryLabel = document.getElementById("efCountryLabel");
-
+  var countryBtn   = $("efCountryBtn");
+  var countryMenu  = $("efCountryMenu");
+  var countryLabel = $("efCountryLabel");
   if (countryBtn && countryMenu) {
-    countryBtn.addEventListener("click", (e) => {
+    countryBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      const open = countryMenu.classList.toggle("open");
+      var open = countryMenu.classList.toggle("open");
       countryBtn.setAttribute("aria-expanded", open);
     });
-
-    countryMenu.addEventListener("click", (e) => {
+    countryMenu.addEventListener("click", function (e) {
       if (e.target.tagName === "LI" && countryLabel) {
         countryLabel.textContent = e.target.textContent;
         countryMenu.classList.remove("open");
         countryBtn.setAttribute("aria-expanded", "false");
       }
     });
-
-    document.addEventListener("click", () => {
+    document.addEventListener("click", function () {
       countryMenu.classList.remove("open");
       countryBtn.setAttribute("aria-expanded", "false");
     });
   }
 
-  // Auto copyright year
-  const yearEl = document.getElementById("efYear");
+  // Auto update copyright year
+  var yearEl = $("efYear");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 
-  /* ==============================================================
-     5. SIGN-IN  —  modal (index.html) + standalone (signin.html)
-     ============================================================== */
+  /* ============================================================
+     6. SIGN-IN MODAL  (index.html)
+     ============================================================ */
 
-  /* ----- helpers ----- */
-  function siValidEmail(v) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
-  }
-  function siSetErr(field, el, msg) {
-    field.classList.add("has-error");
-    el.textContent = msg;
-  }
-  function siClearErr(field, el) {
-    field.classList.remove("has-error");
-    el.textContent = "";
-  }
-  function siShowToast(toastId) {
-    const t = document.getElementById(toastId);
-    if (!t) return;
-    t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 2800);
-  }
-  function siToggleEye(input, eyeBtn) {
-    if (!input || !eyeBtn) return;
-    eyeBtn.addEventListener("click", () => {
-      const show = input.type === "password";
-      input.type = show ? "text" : "password";
-      const s = eyeBtn.querySelector(".si2-eye__show");
-      const h = eyeBtn.querySelector(".si2-eye__hide");
-      if (s) s.style.display = show ? "none" : "";
-      if (h) h.style.display = show ? "" : "none";
-      eyeBtn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+  var overlay   = $("signinOverlay");
+  var openBtn   = $("openSignin");
+  var closeBtn  = $("closeSignin");
+
+  // Open modal
+  if (overlay && openBtn) {
+    openBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      overlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+      resetModalSteps();
+      var inp = $("mEmailInput");
+      if (inp) { inp.value = ""; inp.focus(); }
+    });
+
+    // Close on X button or clicking outside the card
+    if (closeBtn) closeBtn.addEventListener("click", closeSigninModal);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeSigninModal();
+    });
+
+    // Wire 2-step flow for modal
+    wireSigninFlow({
+      emailForm:    $("mFormEmail"),
+      emailInput:   $("mEmailInput"),
+      emailField:   $("mFEmail"),
+      emailErr:     $("mErrEmail"),
+      passForm:     $("mFormPassword"),
+      passInput:    $("mPasswordInput"),
+      passField:    $("mFPassword"),
+      passErr:      $("mErrPassword"),
+      emailDisplay: $("mEmailDisplay"),
+      stepEmail:    $("mStepEmail"),
+      stepPass:     $("mStepPassword"),
+      backBtn:      $("mBackBtn"),
+      eyeBtn:       $("mEyeBtn"),
+      submitBtn:    $("mLoginBtn"),
+      onSuccess: function () {
+        closeSigninModal();
+        showToast("mainToast");
+      }
     });
   }
-  function siBuildTwoStep({ emailFormId, emailInputId, emailFieldId, emailErrId,
-                             passFormId,  passInputId,  passFieldId,  passErrId,
-                             emailDisplayId, stepEmailId, stepPassId,
-                             backBtnId, eyeBtnId, submitBtnId,
-                             onSuccess }) {
-    const fmEmail   = document.getElementById(emailFormId);
-    const inEmail   = document.getElementById(emailInputId);
-    const fdEmail   = document.getElementById(emailFieldId);
-    const erEmail   = document.getElementById(emailErrId);
-    const fmPass    = document.getElementById(passFormId);
-    const inPass    = document.getElementById(passInputId);
-    const fdPass    = document.getElementById(passFieldId);
-    const erPass    = document.getElementById(passErrId);
-    const dispEmail = document.getElementById(emailDisplayId);
-    const stEmail   = document.getElementById(stepEmailId);
-    const stPass    = document.getElementById(stepPassId);
-    const backBtn   = document.getElementById(backBtnId);
-    const eyeBtn    = document.getElementById(eyeBtnId);
-    const subBtn    = document.getElementById(submitBtnId);
 
-    if (!fmEmail || !fmPass) return;
+  function closeSigninModal() {
+    if (!overlay) return;
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
 
-    siToggleEye(inPass, eyeBtn);
+  function resetModalSteps() {
+    var se = $("mStepEmail");
+    var sp = $("mStepPassword");
+    if (se) se.classList.remove("si2-step--hidden");
+    if (sp) sp.classList.add("si2-step--hidden");
+  }
 
-    // Clear on input
-    inEmail && inEmail.addEventListener("input", () => siClearErr(fdEmail, erEmail));
-    inPass  && inPass.addEventListener("input",  () => siClearErr(fdPass,  erPass));
 
-    // Step 1 submit
-    fmEmail.addEventListener("submit", (e) => {
+  /* ============================================================
+     7. SIGN-IN STANDALONE PAGE  (signin.html)
+     ============================================================ */
+
+  if ($("si2Card") && !overlay) {
+    wireSigninFlow({
+      emailForm:    $("formEmail"),
+      emailInput:   $("emailInput"),
+      emailField:   $("fEmail"),
+      emailErr:     $("errEmail"),
+      passForm:     $("formPassword"),
+      passInput:    $("passwordInput"),
+      passField:    $("fPassword"),
+      passErr:      $("errPassword"),
+      emailDisplay: $("emailDisplay"),
+      stepEmail:    $("stepEmail"),
+      stepPass:     $("stepPassword"),
+      backBtn:      $("backBtn"),
+      eyeBtn:       $("eyeBtn"),
+      submitBtn:    $("loginSubmitBtn"),
+      onSuccess: function () {
+        showToast("si2Toast");
+        setTimeout(function () { window.location.href = "index.html"; }, 1800);
+      }
+    });
+  }
+
+
+  /* ============================================================
+     SHARED HELPERS
+     ============================================================ */
+
+  // Wire up the full 2-step email → password sign-in flow
+  function wireSigninFlow(o) {
+    if (!o.emailForm || !o.passForm) return;
+
+    // Show/hide password toggle
+    if (o.eyeBtn && o.passInput) {
+      o.eyeBtn.addEventListener("click", function () {
+        var show = o.passInput.type === "password";
+        o.passInput.type = show ? "text" : "password";
+        var eyeShow = o.eyeBtn.querySelector(".si2-eye__show");
+        var eyeHide = o.eyeBtn.querySelector(".si2-eye__hide");
+        if (eyeShow) eyeShow.style.display = show ? "none" : "";
+        if (eyeHide) eyeHide.style.display = show ? "" : "none";
+        o.eyeBtn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+      });
+    }
+
+    // Clear error when user starts typing
+    if (o.emailInput) o.emailInput.addEventListener("input", function () { clearErr(o.emailField, o.emailErr); });
+    if (o.passInput)  o.passInput.addEventListener("input",  function () { clearErr(o.passField,  o.passErr); });
+
+    // Step 1: validate email → show password step
+    o.emailForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      const v = inEmail ? inEmail.value.trim() : "";
-      if (!v)                { siSetErr(fdEmail, erEmail, "Please enter your email."); return; }
-      if (!siValidEmail(v))  { siSetErr(fdEmail, erEmail, "Enter a valid email address."); return; }
-      siClearErr(fdEmail, erEmail);
-      if (dispEmail) dispEmail.textContent = v;
-      stEmail.classList.add("si2-step--hidden");
-      stPass.classList.remove("si2-step--hidden");
-      if (inPass) inPass.focus();
+      var email = o.emailInput ? o.emailInput.value.trim() : "";
+      if (!email) { return showErr(o.emailField, o.emailErr, "Please enter your email."); }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { return showErr(o.emailField, o.emailErr, "Enter a valid email address."); }
+      clearErr(o.emailField, o.emailErr);
+      if (o.emailDisplay) o.emailDisplay.textContent = email;
+      o.stepEmail.classList.add("si2-step--hidden");
+      o.stepPass.classList.remove("si2-step--hidden");
+      if (o.passInput) o.passInput.focus();
     });
 
-    // Back button
-    backBtn && backBtn.addEventListener("click", () => {
-      stPass.classList.add("si2-step--hidden");
-      stEmail.classList.remove("si2-step--hidden");
-      siClearErr(fdPass, erPass);
-    });
+    // Back button: go back to email step
+    if (o.backBtn) {
+      o.backBtn.addEventListener("click", function () {
+        o.stepPass.classList.add("si2-step--hidden");
+        o.stepEmail.classList.remove("si2-step--hidden");
+        clearErr(o.passField, o.passErr);
+      });
+    }
 
-    // Step 2 submit
-    fmPass.addEventListener("submit", (e) => {
+    // Step 2: validate password → success
+    o.passForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      const v = inPass ? inPass.value : "";
-      if (!v)          { siSetErr(fdPass, erPass, "Please enter your password."); return; }
-      if (v.length < 6){ siSetErr(fdPass, erPass, "Password must be at least 6 characters."); return; }
-      siClearErr(fdPass, erPass);
-      if (subBtn) { subBtn.classList.add("loading"); subBtn.disabled = true; }
-      setTimeout(() => {
-        if (subBtn) { subBtn.classList.remove("loading"); subBtn.disabled = false; }
-        onSuccess();
+      var pass = o.passInput ? o.passInput.value : "";
+      if (!pass)         { return showErr(o.passField, o.passErr, "Please enter your password."); }
+      if (pass.length < 6) { return showErr(o.passField, o.passErr, "Password must be at least 6 characters."); }
+      clearErr(o.passField, o.passErr);
+
+      // Show loading spinner on submit button
+      if (o.submitBtn) { o.submitBtn.classList.add("loading"); o.submitBtn.disabled = true; }
+
+      // Simulate login (1.4s delay) then call success callback
+      setTimeout(function () {
+        if (o.submitBtn) { o.submitBtn.classList.remove("loading"); o.submitBtn.disabled = false; }
+        o.onSuccess();
       }, 1400);
     });
   }
 
-  /* ----- A. Modal in index.html ----- */
-  const overlay    = document.getElementById("signinOverlay");
-  const openBtn    = document.getElementById("openSignin");
-  const closeBtn   = document.getElementById("closeSignin");
-
-  if (overlay && openBtn) {
-    // Open
-    openBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      overlay.classList.add("open");
-      document.body.style.overflow = "hidden";
-      const inp = document.getElementById("mEmailInput");
-      if (inp) { inp.value = ""; inp.focus(); }
-      // reset steps
-      const se = document.getElementById("mStepEmail");
-      const sp = document.getElementById("mStepPassword");
-      if (se) se.classList.remove("si2-step--hidden");
-      if (sp) sp.classList.add("si2-step--hidden");
-    });
-
-    // Close button
-    closeBtn && closeBtn.addEventListener("click", closeModal);
-
-    // Click outside card
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) closeModal();
-    });
-
-    // ESC key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && overlay.classList.contains("open")) closeModal();
-    });
-
-    function closeModal() {
-      overlay.classList.remove("open");
-      document.body.style.overflow = "";
-    }
-
-    // Wire two-step flow for modal
-    siBuildTwoStep({
-      emailFormId:   "mFormEmail",   emailInputId: "mEmailInput",
-      emailFieldId:  "mFEmail",      emailErrId:   "mErrEmail",
-      passFormId:    "mFormPassword", passInputId:  "mPasswordInput",
-      passFieldId:   "mFPassword",   passErrId:    "mErrPassword",
-      emailDisplayId: "mEmailDisplay",
-      stepEmailId:   "mStepEmail",   stepPassId:   "mStepPassword",
-      backBtnId:     "mBackBtn",     eyeBtnId:     "mEyeBtn",
-      submitBtnId:   "mLoginBtn",
-      onSuccess() {
-        closeModal();
-        siShowToast("mainToast");
-      }
-    });
+  // Show a validation error on a field
+  function showErr(field, errEl, msg) {
+    if (field)  field.classList.add("has-error");
+    if (errEl)  errEl.textContent = msg;
   }
 
-  /* ----- B. Standalone signin.html ----- */
-  if (document.getElementById("si2Card") && !overlay) {
-    siBuildTwoStep({
-      emailFormId:   "formEmail",    emailInputId: "emailInput",
-      emailFieldId:  "fEmail",       emailErrId:   "errEmail",
-      passFormId:    "formPassword",  passInputId:  "passwordInput",
-      passFieldId:   "fPassword",    passErrId:    "errPassword",
-      emailDisplayId: "emailDisplay",
-      stepEmailId:   "stepEmail",    stepPassId:   "stepPassword",
-      backBtnId:     "backBtn",      eyeBtnId:     "eyeBtn",
-      submitBtnId:   "loginSubmitBtn",
-      onSuccess() {
-        siShowToast("si2Toast");
-        setTimeout(() => { window.location.href = "index.html"; }, 1800);
-      }
-    });
+  // Remove validation error from a field
+  function clearErr(field, errEl) {
+    if (field)  field.classList.remove("has-error");
+    if (errEl)  errEl.textContent = "";
+  }
+
+  // Show a toast notification for 2.8 seconds
+  function showToast(id) {
+    var toast = $(id);
+    if (!toast) return;
+    toast.classList.add("show");
+    setTimeout(function () { toast.classList.remove("show"); }, 2800);
   }
 
 }); // end DOMContentLoaded
