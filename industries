@@ -1,0 +1,18 @@
+<section class="industries-section">
+  <div class="industries-heading">
+    <span>INDUSTRIES</span>
+    <h1>Built for any kind of event</h1>
+    <p>From concerts and festivals to classes and workshops, find ticketing tools that fit your event.</p>
+  </div>
+  <div class="industry-wrapper">
+    <button class="industry-arrow left" type="button" aria-label="Scroll left" onclick="moveIndustry(-1)">&#10094;</button>
+    <div class="industry-slider" id="industrySlider">
+      <article class="industry-card"><img src="images/food.jpg" alt="Food and drink"><div class="industry-overlay food"><h2>FOR</h2><h3>FOOD &amp; DRINK</h3></div></article>
+      <article class="industry-card"><img src="images/sports.jpg" alt="Sports"><div class="industry-overlay sports"><h2>FOR</h2><h3>SPORTS</h3></div></article>
+      <article class="industry-card"><img src="images/hobbies.jpg" alt="Hobbies"><div class="industry-overlay hobbies"><h2>FOR</h2><h3>HOBBIES</h3></div></article>
+      <article class="industry-card"><img src="images/holidays.jpg" alt="Holidays"><div class="industry-overlay holidays"><h2>FOR</h2><h3>HOLIDAYS</h3></div></article>
+      <article class="industry-card"><img src="images/nightlife.jpg" alt="Nightlife"><div class="industry-overlay nightlife"><h2>FOR</h2><h3>NIGHTLIFE</h3></div></article>
+    </div>
+    <button class="industry-arrow right" type="button" aria-label="Scroll right" onclick="moveIndustry(1)">&#10095;</button>
+  </div>
+</section>
