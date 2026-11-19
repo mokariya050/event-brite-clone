@@ -234,4 +234,175 @@ document.addEventListener("DOMContentLoaded", function () {
   const yearEl = document.getElementById("efYear");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+
+  /* ==============================================================
+     5. SIGN-IN  —  modal (index.html) + standalone (signin.html)
+     ============================================================== */
+
+  /* ----- helpers ----- */
+  function siValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  }
+  function siSetErr(field, el, msg) {
+    field.classList.add("has-error");
+    el.textContent = msg;
+  }
+  function siClearErr(field, el) {
+    field.classList.remove("has-error");
+    el.textContent = "";
+  }
+  function siShowToast(toastId) {
+    const t = document.getElementById(toastId);
+    if (!t) return;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2800);
+  }
+  function siToggleEye(input, eyeBtn) {
+    if (!input || !eyeBtn) return;
+    eyeBtn.addEventListener("click", () => {
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      const s = eyeBtn.querySelector(".si2-eye__show");
+      const h = eyeBtn.querySelector(".si2-eye__hide");
+      if (s) s.style.display = show ? "none" : "";
+      if (h) h.style.display = show ? "" : "none";
+      eyeBtn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    });
+  }
+  function siBuildTwoStep({ emailFormId, emailInputId, emailFieldId, emailErrId,
+                             passFormId,  passInputId,  passFieldId,  passErrId,
+                             emailDisplayId, stepEmailId, stepPassId,
+                             backBtnId, eyeBtnId, submitBtnId,
+                             onSuccess }) {
+    const fmEmail   = document.getElementById(emailFormId);
+    const inEmail   = document.getElementById(emailInputId);
+    const fdEmail   = document.getElementById(emailFieldId);
+    const erEmail   = document.getElementById(emailErrId);
+    const fmPass    = document.getElementById(passFormId);
+    const inPass    = document.getElementById(passInputId);
+    const fdPass    = document.getElementById(passFieldId);
+    const erPass    = document.getElementById(passErrId);
+    const dispEmail = document.getElementById(emailDisplayId);
+    const stEmail   = document.getElementById(stepEmailId);
+    const stPass    = document.getElementById(stepPassId);
+    const backBtn   = document.getElementById(backBtnId);
+    const eyeBtn    = document.getElementById(eyeBtnId);
+    const subBtn    = document.getElementById(submitBtnId);
+
+    if (!fmEmail || !fmPass) return;
+
+    siToggleEye(inPass, eyeBtn);
+
+    // Clear on input
+    inEmail && inEmail.addEventListener("input", () => siClearErr(fdEmail, erEmail));
+    inPass  && inPass.addEventListener("input",  () => siClearErr(fdPass,  erPass));
+
+    // Step 1 submit
+    fmEmail.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = inEmail ? inEmail.value.trim() : "";
+      if (!v)                { siSetErr(fdEmail, erEmail, "Please enter your email."); return; }
+      if (!siValidEmail(v))  { siSetErr(fdEmail, erEmail, "Enter a valid email address."); return; }
+      siClearErr(fdEmail, erEmail);
+      if (dispEmail) dispEmail.textContent = v;
+      stEmail.classList.add("si2-step--hidden");
+      stPass.classList.remove("si2-step--hidden");
+      if (inPass) inPass.focus();
+    });
+
+    // Back button
+    backBtn && backBtn.addEventListener("click", () => {
+      stPass.classList.add("si2-step--hidden");
+      stEmail.classList.remove("si2-step--hidden");
+      siClearErr(fdPass, erPass);
+    });
+
+    // Step 2 submit
+    fmPass.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = inPass ? inPass.value : "";
+      if (!v)          { siSetErr(fdPass, erPass, "Please enter your password."); return; }
+      if (v.length < 6){ siSetErr(fdPass, erPass, "Password must be at least 6 characters."); return; }
+      siClearErr(fdPass, erPass);
+      if (subBtn) { subBtn.classList.add("loading"); subBtn.disabled = true; }
+      setTimeout(() => {
+        if (subBtn) { subBtn.classList.remove("loading"); subBtn.disabled = false; }
+        onSuccess();
+      }, 1400);
+    });
+  }
+
+  /* ----- A. Modal in index.html ----- */
+  const overlay    = document.getElementById("signinOverlay");
+  const openBtn    = document.getElementById("openSignin");
+  const closeBtn   = document.getElementById("closeSignin");
+
+  if (overlay && openBtn) {
+    // Open
+    openBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      overlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+      const inp = document.getElementById("mEmailInput");
+      if (inp) { inp.value = ""; inp.focus(); }
+      // reset steps
+      const se = document.getElementById("mStepEmail");
+      const sp = document.getElementById("mStepPassword");
+      if (se) se.classList.remove("si2-step--hidden");
+      if (sp) sp.classList.add("si2-step--hidden");
+    });
+
+    // Close button
+    closeBtn && closeBtn.addEventListener("click", closeModal);
+
+    // Click outside card
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    // ESC key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("open")) closeModal();
+    });
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    // Wire two-step flow for modal
+    siBuildTwoStep({
+      emailFormId:   "mFormEmail",   emailInputId: "mEmailInput",
+      emailFieldId:  "mFEmail",      emailErrId:   "mErrEmail",
+      passFormId:    "mFormPassword", passInputId:  "mPasswordInput",
+      passFieldId:   "mFPassword",   passErrId:    "mErrPassword",
+      emailDisplayId: "mEmailDisplay",
+      stepEmailId:   "mStepEmail",   stepPassId:   "mStepPassword",
+      backBtnId:     "mBackBtn",     eyeBtnId:     "mEyeBtn",
+      submitBtnId:   "mLoginBtn",
+      onSuccess() {
+        closeModal();
+        siShowToast("mainToast");
+      }
+    });
+  }
+
+  /* ----- B. Standalone signin.html ----- */
+  if (document.getElementById("si2Card") && !overlay) {
+    siBuildTwoStep({
+      emailFormId:   "formEmail",    emailInputId: "emailInput",
+      emailFieldId:  "fEmail",       emailErrId:   "errEmail",
+      passFormId:    "formPassword",  passInputId:  "passwordInput",
+      passFieldId:   "fPassword",    passErrId:    "errPassword",
+      emailDisplayId: "emailDisplay",
+      stepEmailId:   "stepEmail",    stepPassId:   "stepPassword",
+      backBtnId:     "backBtn",      eyeBtnId:     "eyeBtn",
+      submitBtnId:   "loginSubmitBtn",
+      onSuccess() {
+        siShowToast("si2Toast");
+        setTimeout(() => { window.location.href = "index.html"; }, 1800);
+      }
+    });
+  }
+
 }); // end DOMContentLoaded
