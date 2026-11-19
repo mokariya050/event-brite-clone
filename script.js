@@ -1,213 +1,231 @@
 // ============================================================
 //  EVENTBRITE CLONE — script.js
-//  Sections:
-//    1. Header  (menu, dropdown, search, scroll shadow)
-//    2. Categories  (active pill)
-//    3. Event tabs  (active state)
-//    4. Destinations carousel  (prev/next scroll)
-//    5. Footer  (chips, drag-scroll, country picker, year)
-//    6. Sign-in modal  (open/close, 2-step email → password)
-//    7. Sign-in standalone page  (signin.html same flow)
+//  Scope: Header + Hero + Categories (Team Member 1)
+//  Teammates: add your JS below the "TEAMMATE ZONE" comment.
 // ============================================================
 
-document.addEventListener("DOMContentLoaded", function () {
+// ---- Mobile menu toggle ----
+const menuToggle = document.getElementById("menuToggle");
+const nav        = document.getElementById("nav");
 
-  // Shortcut helper
-  function $(id) { return document.getElementById(id); }
+menuToggle.addEventListener("click", () => {
+  const isOpen = nav.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", isOpen);
+});
 
-
-  /* ============================================================
-     1. HEADER
-     ============================================================ */
-
-  // Mobile hamburger toggle
-  var menuToggle = $("menuToggle");
-  var nav = $("nav");
-  if (menuToggle && nav) {
-    menuToggle.addEventListener("click", function () {
-      var open = nav.classList.toggle("open");
-      menuToggle.setAttribute("aria-expanded", open);
-    });
-    // Close nav when any link is clicked (mobile UX)
-    nav.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        nav.classList.remove("open");
-        menuToggle.setAttribute("aria-expanded", "false");
-      });
-    });
-  }
-
-  // Help Center dropdown
-  var helpBtn  = $("helpBtn");
-  var helpMenu = $("helpMenu");
-  if (helpBtn && helpMenu) {
-    helpBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      var open = helpMenu.classList.toggle("open");
-      helpBtn.setAttribute("aria-expanded", open);
-    });
-  }
-
-  // Close dropdowns when clicking outside or pressing Escape
-  document.addEventListener("click", function () {
-    if (helpMenu) helpMenu.classList.remove("open");
-    if (helpBtn)  helpBtn.setAttribute("aria-expanded", "false");
+// Close nav when any nav link is clicked (mobile UX)
+nav.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    nav.classList.remove("open");
+    menuToggle.setAttribute("aria-expanded", "false");
   });
-  document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape") return;
-    if (helpMenu) helpMenu.classList.remove("open");
-    if (nav)      nav.classList.remove("open");
-    if (helpBtn)  helpBtn.setAttribute("aria-expanded", "false");
-    if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
-    closeSigninModal();
-  });
+});
 
-  // Search (logs to console — replace with real search later)
-  var searchBtn   = $("searchBtn");
-  var searchInput = $("searchInput");
-  var locInput    = $("locationInput");
-  function runSearch() {
-    var q = searchInput ? searchInput.value.trim() : "";
-    if (q) console.log("Search:", q, "| Location:", locInput ? locInput.value : "");
+// ---- Help Center dropdown ----
+const helpBtn  = document.getElementById("helpBtn");
+const helpMenu = document.getElementById("helpMenu");
+
+helpBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const isOpen = helpMenu.classList.toggle("open");
+  helpBtn.setAttribute("aria-expanded", isOpen);
+});
+
+// Close on outside click
+document.addEventListener("click", () => {
+  helpMenu.classList.remove("open");
+  helpBtn.setAttribute("aria-expanded", "false");
+});
+
+// Close on Escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    helpMenu.classList.remove("open");
+    helpBtn.setAttribute("aria-expanded", "false");
+    nav.classList.remove("open");
+    menuToggle.setAttribute("aria-expanded", "false");
   }
-  if (searchBtn)  searchBtn.addEventListener("click", runSearch);
-  if (searchInput) searchInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") runSearch();
+});
+
+// ---- Search (demo) ----
+function runSearch() {
+  const q   = document.getElementById("searchInput").value.trim();
+  const loc = document.getElementById("locationInput").value.trim();
+  if (!q) return;
+  console.log("Search:", q, "| Location:", loc);
+  // Uncomment to navigate:
+  // window.location.href = `search.html?q=${encodeURIComponent(q)}&loc=${encodeURIComponent(loc)}`;
+}
+
+document.getElementById("searchBtn").addEventListener("click", runSearch);
+document.getElementById("searchInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") runSearch();
+});
+
+// ---- Category pill: mark active ----
+document.querySelectorAll(".category").forEach((cat) => {
+  cat.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.querySelectorAll(".category").forEach((c) => c.classList.remove("active"));
+    cat.classList.add("active");
   });
+});
 
-  // Add shadow to sticky header on scroll
-  var header = document.querySelector(".header");
-  if (header) {
-    window.addEventListener("scroll", function () {
-      header.style.boxShadow = window.scrollY > 4
-        ? "0 2px 12px rgba(30,10,60,0.09)"
-        : "none";
-    }, { passive: true });
-  }
+// ---- Sticky header shadow on scroll ----
+const header = document.querySelector(".header");
+window.addEventListener("scroll", () => {
+  header.style.boxShadow = window.scrollY > 4
+    ? "0 2px 12px rgba(30,10,60,0.09)"
+    : "none";
+}, { passive: true });
 
+// ============================================================
+//  TEAMMATE ZONE — add your JS below this line
+//  (Teammate 2: Middle section | Teammate 3: Footer)
+// ============================================================
 
-  /* ============================================================
-     2. CATEGORIES — active pill on click
-     ============================================================ */
-  document.querySelectorAll(".category").forEach(function (cat) {
-    cat.addEventListener("click", function (e) {
-      e.preventDefault();
-      document.querySelectorAll(".category").forEach(function (c) { c.classList.remove("active"); });
-      cat.classList.add("active");
-    });
-  });
+// ============================================================
+//  FOOTER JS — Teammate 3
+// ============================================================
+(function () {
+  const ARROW =
+    '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">' +
+    '<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"' +
+    ' stroke-linejoin="round" d="M7 17L17 7M8 7h9v9"/></svg>';
 
+  const cities = [
+    "Abilene", "Phoenix", "Albuquerque", "Anaheim", "Raleigh", "Wichita"
+  ];
 
-  /* ============================================================
-     3. EVENT TABS — active state
-     ============================================================ */
-  document.querySelectorAll(".tab").forEach(function (tab) {
-    tab.addEventListener("click", function () {
-      document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
-      tab.classList.add("active");
-    });
-  });
-
-
-  /* ============================================================
-     4. DESTINATIONS CAROUSEL — prev / next buttons
-     ============================================================ */
-  var grid    = $("destinationsGrid");
-  var prevBtn = $("prevBtn");
-  var nextBtn = $("nextBtn");
-
-  if (grid && prevBtn && nextBtn) {
-    function pageWidth() {
-      var gap = parseInt(getComputedStyle(grid).columnGap, 10) || 0;
-      return grid.clientWidth + gap;
-    }
-    function updateCarouselBtns() {
-      prevBtn.disabled = grid.scrollLeft <= 2;
-      nextBtn.disabled = grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 2;
-    }
-    nextBtn.addEventListener("click", function () { grid.scrollBy({ left:  pageWidth(), behavior: "smooth" }); });
-    prevBtn.addEventListener("click", function () { grid.scrollBy({ left: -pageWidth(), behavior: "smooth" }); });
-    grid.addEventListener("scroll", updateCarouselBtns, { passive: true });
-    window.addEventListener("resize", updateCarouselBtns);
-    updateCarouselBtns();
-  }
-
-
-  /* ============================================================
-     5. FOOTER — chips, drag-scroll, country picker, year
-     ============================================================ */
-
-  // City & state chip data
-  var cities = ["Abilene", "Phoenix", "Albuquerque", "Anaheim", "Raleigh", "Wichita"];
-  var states1 = ["Alabama","Arizona","California","Connecticut","District of Columbia","Georgia","Idaho","Indiana","Kansas","Louisiana","Michigan","Minnesota"];
-  var states2 = ["Alaska","Arkansas","Colorado","Delaware","Florida","Hawaii","Illinois","Iowa","Kentucky","Maine","Massachusetts","Mississippi"];
-
-  var arrowSVG = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M8 7h9v9"/></svg>';
+  const statesRow1 = [
+    "Alabama", "Arizona", "California", "Connecticut", "District of Columbia",
+    "Georgia", "Idaho", "Indiana", "Kansas", "Louisiana", "Michigan", "Minnesota"
+  ];
+  const statesRow2 = [
+    "Alaska", "Arkansas", "Colorado", "Delaware", "Florida", "Hawaii",
+    "Illinois", "Iowa", "Kentucky", "Maine", "Massachusetts", "Mississippi"
+  ];
 
   function chip(text) {
-    return '<a href="#" class="ef__chip">' + text + arrowSVG + '</a>';
+    return '<a href="#" class="ef__chip">' + text + ARROW + "</a>";
   }
 
-  var citiesEl = $("efCities");
-  var row1     = $("efStatesRow1");
-  var row2     = $("efStatesRow2");
+  const citiesEl = document.getElementById("efCities");
+  const row1     = document.getElementById("efStatesRow1");
+  const row2     = document.getElementById("efStatesRow2");
 
-  if (citiesEl && row1 && row2) {
-    citiesEl.innerHTML = cities.map(function (c) { return chip("Things to do in " + c); }).join("");
-    row1.innerHTML     = states1.map(chip).join("");
-    row2.innerHTML     = states2.map(chip).join("");
+  // Guard — footer may not be on every page
+  if (!citiesEl) return;
 
-    // Drag-to-scroll on the state rows
-    var scroller = $("efStates");
-    if (scroller) {
-      var isDown = false, startX = 0, startLeft = 0, moved = false;
-      scroller.addEventListener("mousedown", function (e) {
-        isDown = true; moved = false;
-        startX = e.pageX; startLeft = scroller.scrollLeft;
-        scroller.classList.add("dragging");
-      });
-      window.addEventListener("mouseup", function () {
-        isDown = false;
-        scroller.classList.remove("dragging");
-      });
-      window.addEventListener("mousemove", function (e) {
-        if (!isDown) return;
-        if (Math.abs(e.pageX - startX) > 4) moved = true;
-        scroller.scrollLeft = startLeft - (e.pageX - startX);
-      });
-      scroller.addEventListener("click", function (e) { if (moved) e.preventDefault(); }, true);
-    }
-  }
+  // Populate chips
+  citiesEl.innerHTML = cities.map((c) => chip("Things to do in " + c)).join("");
+  row1.innerHTML     = statesRow1.map(chip).join("");
+  row2.innerHTML     = statesRow2.map(chip).join("");
+
+  // Drag-to-scroll for state rows
+  const scroller = document.getElementById("efStates");
+  let isDown = false, startX = 0, startLeft = 0, moved = false;
+
+  scroller.addEventListener("mousedown", (e) => {
+    isDown = true; moved = false;
+    startX    = e.pageX;
+    startLeft = scroller.scrollLeft;
+    scroller.classList.add("dragging");
+  });
+  window.addEventListener("mouseup", () => {
+    isDown = false;
+    scroller.classList.remove("dragging");
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (!isDown) return;
+    const dx = e.pageX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    scroller.scrollLeft = startLeft - dx;
+  });
+  // Prevent link navigation while dragging
+  scroller.addEventListener("click", (e) => {
+    if (moved) e.preventDefault();
+  }, true);
 
   // Country dropdown
-  var countryBtn   = $("efCountryBtn");
-  var countryMenu  = $("efCountryMenu");
-  var countryLabel = $("efCountryLabel");
-  if (countryBtn && countryMenu) {
-    countryBtn.addEventListener("click", function (e) {
-      e.stopPropagation();
-      var open = countryMenu.classList.toggle("open");
-      countryBtn.setAttribute("aria-expanded", open);
-    });
-    countryMenu.addEventListener("click", function (e) {
-      if (e.target.tagName === "LI" && countryLabel) {
-        countryLabel.textContent = e.target.textContent;
-        countryMenu.classList.remove("open");
-        countryBtn.setAttribute("aria-expanded", "false");
-      }
-    });
-    document.addEventListener("click", function () {
+  const countryBtn   = document.getElementById("efCountryBtn");
+  const countryMenu  = document.getElementById("efCountryMenu");
+  const countryLabel = document.getElementById("efCountryLabel");
+
+  countryBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = countryMenu.classList.toggle("open");
+    countryBtn.setAttribute("aria-expanded", open);
+  });
+
+  countryMenu.addEventListener("click", (e) => {
+    if (e.target.tagName === "LI") {
+      countryLabel.textContent = e.target.textContent;
       countryMenu.classList.remove("open");
       countryBtn.setAttribute("aria-expanded", "false");
-    });
-  }
+    }
+  });
 
-  // Auto update copyright year
-  var yearEl = $("efYear");
+  document.addEventListener("click", () => {
+    countryMenu.classList.remove("open");
+    countryBtn.setAttribute("aria-expanded", "false");
+  });
+
+  // Auto-update copyright year
+  const yearEl = document.getElementById("efYear");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
 
+const locationBtn = document.getElementById("locationBtn");
+const locationDropdown = document.getElementById("locationDropdown");
+const currentLocation = document.getElementById("currentLocation");
 
-  /* ============================================================
+locationBtn.addEventListener("click", function (event) {
+    event.stopPropagation();
+    locationDropdown.classList.toggle("show");
+});
+
+// Current location option
+currentLocation.addEventListener("click", function () {
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                alert(
+                    "Location detected successfully!\nLatitude: " +
+                    latitude +
+                    "\nLongitude: " +
+                    longitude
+                );
+
+                locationDropdown.classList.remove("show");
+
+            },
+            function () {
+                alert("Please allow location access in your browser.");
+            }
+        );
+
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+
+    if (!event.target.closest(".location-dropdown")) {
+        locationDropdown.classList.remove("show");
+    }
+
+});
+
+ /* ============================================================
      6. SIGN-IN MODAL  (index.html)
      ============================================================ */
 
@@ -383,4 +401,4 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(function () { toast.classList.remove("show"); }, 2800);
   }
 
-}); // end DOMContentLoaded
+; // end DOMContentLoaded
