@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eventbrite - Discover the Best Local Events &amp; Things to Do</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo" aria-label="Eventbrite home">
+        <img src="images/logo.png" alt="Logo">
+        <span>eventbrite</span>
+    </a>
+    <form class="search" role="search" onsubmit="return false">
+      <div class="search__field">
+        <svg class="search__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path fill="none" stroke="#6f7287" stroke-width="2" stroke-linecap="round" d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm5 12 5 5"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search events" aria-label="Search events">
+      </div>
+      <div class="search__divider"></div>
+      <div class="search__field search__field--location">
+        <svg class="search__icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path fill="#6f7287" d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+        </svg>
+        <input type="text" id="locationInput" value="Ahmadābād" aria-label="Location">
+      </div>
+      <button type="submit" class="search__btn" id="searchBtn" aria-label="Search">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm5 12 5 5"/>
+        </svg>
+      </button>
+    </form>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <nav class="nav" id="nav">
+      <a href="#" class="nav__link">Updates</a>
+      <a href="#" class="nav__link">Find Events</a>
+      <a href="#" class="nav__link nav__create">Create Events</a>
+      <div class="dropdown help-dropdown">
+        <button class="dropdown__btn nav__link" id="helpBtn" aria-expanded="false">
+          Help Center
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul class="dropdown__menu" id="helpMenu" role="menu">
+          <li><a href="#" role="menuitem">Visit Help Center</a></li>
+          <li><a href="#" role="menuitem">Contact support</a></li>
+          <li><a href="#" role="menuitem">Organizer help</a></li>
+        </ul>
+      </div>
+      <a href="#" class="nav__link">Find my tickets</a>
+      <a href="signin.html" class="sign-in-btn">Sign in</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-label="Hero banner">
+      <img src="/images/hero-music.jpg" alt="Singer performing live on stage" class="hero__img" loading="eager" fetchpriority="high">
+      <div class="hero__overlay" aria-hidden="true"></div>
+      <div class="hero__text">
+        <span class="hero__tag">GET INTO IT</span>
+        <h1 class="hero__heading">
+          <span class="hero__line hero__line--1">FROM POP BALLADS</span>
+          <span class="hero__line hero__line--2">TO EMO ENCORES</span>
+        </h1>
+        <a href="signin.html" class="hero-btn">Get Into Live Music</a>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories" aria-label="Browse by category">
+      <a href="#" class="category"><span class="category__icon">🎤</span><span class="category__label">Music</span></a>
+      <a href="#" class="category"><span class="category__icon">🪩</span><span class="category__label">Nightlife</span></a>
+      <a href="#" class="category"><span class="category__icon">🎭</span><span class="category__label">Performing &amp; Visual Arts</span></a>
+      <a href="#" class="category"><span class="category__icon">🎉</span><span class="category__label">Holidays</span></a>
+      <a href="#" class="category"><span class="category__icon">💬</span><span class="category__label">Dating</span></a>
+      <a href="#" class="category"><span class="category__icon">🎮</span><span class="category__label">Hobbies</span></a>
+      <a href="#" class="category"><span class="category__icon">💼</span><span class="category__label">Business</span></a>
+      <a href="#" class="category"><span class="category__icon">🍹</span><span class="category__label">Food &amp; Drink</span></a>
+    </section>
+
+
+<!-- INDUSTRIES SECTION -->
+
+<section class="industries-section">
+
+    <div class="industries-heading">
+
+        <p class="industries-label">INDUSTRIES</p>
+
+        <h2>Built for any kind of event</h2>
+
+        <p class="industries-description">
+            From concerts and festivals to classes and workshops,
+            find ticketing tools that fit your event.
+        </p>
+
+    </div>
+
+    <div class="industries-slider">
+      <div class="industry-card">
+
+    <div class="ticket-cutouts">
+        <span class="cutout top-left"></span>
+        <span class="cutout top-right"></span>
+        <span class="cutout bottom-left"></span>
+        <span class="cutout bottom-right"></span>
+    </div>
+
+            <img src="images/industry-food.jpg" alt="Food and dining events">
+            <div class="industry-overlay">
+                <h3>Food & Drink</h3>
+            </div>
+        </div>
+
+        <div class="industry-card">
+            <img src="images/industry-sports.jpg" alt="Sports events">
+            <div class="industry-overlay">
+                <h3>Sports</h3>
+            </div>
+        </div>
+
+        <div class="industry-card">
+            <img src="images/industry-music.jpg" alt="Music events">
+            <div class="industry-overlay">
+                <h3>Music</h3>
+            </div>
+        </div>
+
+        <div class="industry-card">
+            <img src="images/industry-travel.jpg" alt="Travel events">
+            <div class="industry-overlay">
+                <h3>Travel & Outdoor</h3>
+            </div>
+        </div>
+
+        <div class="industry-card">
+            <img src="images/industry-concerts.jpg" alt="concerts">
+            <div class="industry-overlay">
+                <h3>Concerts</h3>
+            </div>
+        </div>
+
+        <div class="industry-card">
+            <img src="images/industry-business.jpg" alt="Business events">
+            <div class="industry-overlay">
+                <h3>Business</h3>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+    
+    <!-- MIDDLE SECTION: EVENTS -->
+    <section id="middle-section">
+      <div class="events-container">
+        <div class="top-section">
+    <h1>
+        Discover events in
+        <span class="location-dropdown">
+            <span class="city-name">Ahmedabad</span>
+
+            <button class="location-toggle" id="locationBtn" type="button">
+                ⌄
+            </button>
+
+            <div class="dropdown-menu" id="locationDropdown">
+
+                <button class="dropdown-option" id="currentLocation" type="button">
+                    <span class="option-icon">📍</span>
+                    <span class="option-text">
+                        <strong>Use my current location</strong>
+                        <small>Find events near you</small>
+                    </span>
+                </button>
+
+                <a href="https://www.eventbrite.com/d/online/" class="dropdown-option">
+                    <span class="option-icon">🌐</span>
+                    <span class="option-text">
+                        <strong>Browse online events</strong>
+                        <small>Discover online events</small>
+                    </span>
+                </a>
+
+            </div>
+        </span>
+    </h1>
+
+    <nav class="tabs" aria-label="Event filters">
+        <button class="tab active" type="button">All</button>
+        <button class="tab" type="button">For you</button>
+        <button class="tab" type="button">Today</button>
+        <button class="tab" type="button">This weekend</button>
+    </nav>
+</div>
+
+        <div class="events-grid">
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event1.jpg" alt="Grief Gab event"></div>
+            <div class="event-heading"><h2>Grief Gab | On Air: Audio-Only Grief Conversations</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Today • 7:00 PM GMT+5:30</p><p class="event-venue">Online Event</p><p class="event-price">Free</p><p class="event-promo">Promoted</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event2.jpg" alt="Event in Ahmedabad"></div>
+            <div class="event-heading"><h2>Event in Ahmedabad Fun and Joy</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Mon, Dec 7 • 10:00 AM</p><p class="event-venue">Ghodasar Canal Road</p><p class="event-price">From $2.91</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event3.jpg" alt="MSME Business Summit"></div>
+            <div class="event-heading"><h2>MSME Business Summit 2026 | Ahmedabad</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Sat, Dec 12 • 8:30 AM</p><p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road, Ahmedabad</p><p class="event-price">From $20.46</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event4.jpg" alt="Unleash Your Greatness"></div>
+            <div class="event-heading"><h2>UNLEASH YOUR GREATNESS</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Today • 11:30 PM GMT+5:30</p><p class="event-venue">Ahmedabad</p><p class="event-price">From $268.61</p><p class="event-promo">Promoted</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event5.jpg" alt="Global Startup Summit"></div>
+            <div class="event-heading"><h2>Global Startup Summit 2026 | Ahmedabad</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Sat, Dec 12 • 8:30 AM</p><p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road, Ahmedabad</p><p class="event-price">From $20.46</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event6.jpg" alt="TechAI India Summit"></div>
+            <div class="event-heading"><h2>TechAI India Summit – Ahmedabad 2026</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Sat, Dec 12 • 8:30 AM</p><p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road, Ahmedabad</p><p class="event-price">From $20.46</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event7.jpg" alt="International D2C Conclave"></div>
+            <div class="event-heading"><h2>International D2C Conclave 2026 | Ahmedabad</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Sat, Dec 12 • 8:30 AM</p><p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road, Ahmedabad</p><p class="event-price">From $20.46</p>
+          </article>
+          <article class="event-card">
+            <div class="image-wrapper"><img src="images/event8.jpg" alt="EFY Expo Gujarat"></div>
+            <div class="event-heading"><h2>EFY Expo Gujarat | 3-5 December 2026</h2><div class="event-actions"><button title="Share" type="button">⇧</button><button title="Favourite" type="button">♡</button></div></div>
+            <p class="event-date">Thu, Dec 3 • 10:00 AM</p><p class="event-venue">Helipad Exhibition Centre, Gate 3</p><p class="event-price">Free</p>
+          </article>
+        </div>
+      </div>
+
+      <!-- TOP DESTINATIONS -->
+      <section class="destinations-section">
+        <div class="destinations-header">
+          <h2 class="section-title">Top destinations in United States</h2>
+          <div class="carousel-controls">
+            <button class="carousel-btn" id="prevBtn" aria-label="Previous">❮</button>
+            <button class="carousel-btn" id="nextBtn" aria-label="Next">❯</button>
+          </div>
+        </div>
+        <div class="destinations-grid" id="destinationsGrid">
+          <div class="destination-card"><img src="images/newyork.jpg" alt="New York"><h3>New York</h3></div>
+          <div class="destination-card"><img src="images/sanfrancisco.jpg" alt="San Francisco"><h3>San Francisco</h3></div>
+          <div class="destination-card"><img src="images/losangeles.jpg" alt="Los Angeles"><h3>Los Angeles</h3></div>
+          <div class="destination-card"><img src="images/chicago.jpg" alt="Chicago"><h3>Chicago</h3></div>
+          <div class="destination-card"><img src="images/washington.jpg" alt="Washington DC"><h3>Washington DC</h3></div>
+          <div class="destination-card"><img src="images/lasvegas.jpg" alt="Las Vegas"><h3>Las Vegas</h3></div>
+          <div class="destination-card"><img src="images/miami.jpg" alt="Miami"><h3>Miami</h3></div>
+          <div class="destination-card"><img src="images/boston.jpg" alt="Boston"><h3>Boston</h3></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer-section" class="ef">
+    <div class="ef__wrap">
+      <h2 class="ef__title">Popular cities</h2>
+      <div class="ef__chips" id="efCities"></div>
+      <h2 class="ef__title ef__title--state">Explore by State</h2>
+      <div class="ef__scroll" id="efStates">
+        <div class="ef__chips ef__chips--row" id="efStatesRow1"></div>
+        <div class="ef__chips ef__chips--row" id="efStatesRow2"></div>
+      </div>
+    </div>
+    <div class="ef__cols">
+      <div><h3>Use Eventbrite</h3><ul>
+        <li><a href="#">Create Events</a></li><li><a href="#">Pricing</a></li><li><a href="#">Event Marketing Platform</a></li><li><a href="#">Eventbrite Mobile Ticket App</a></li><li><a href="#">Eventbrite Check-In App</a></li><li><a href="#">Eventbrite App Marketplace</a></li><li><a href="#">Event Registration Software</a></li><li><a href="#">Community Guidelines</a></li><li><a href="#">FAQs</a></li><li><a href="#">Sitemap</a></li>
+      </ul></div>
+      <div><h3>Plan Events</h3><ul>
+        <li><a href="#">Sell Tickets Online</a></li><li><a href="#">Performing Arts Ticketing Software</a></li><li><a href="#">Sell Concert Tickets Online</a></li><li><a href="#">Event Payment System</a></li><li><a href="#">Solutions for Professional Services</a></li><li><a href="#">Event Management Software</a></li><li><a href="#">Halloween Party Planning</a></li><li><a href="#">Virtual Events Platform</a></li><li><a href="#">QR Codes for Event Check-In</a></li><li><a href="#">Post your event online</a></li>
+      </ul></div>
+      <div><h3>Find Events</h3><ul>
+        <li><a href="#">New Orleans Food &amp; Drink Events</a></li><li><a href="#">San Francisco Holiday Events</a></li><li><a href="#">Tulum Music Events</a></li><li><a href="#">Denver Hobby Events</a></li><li><a href="#">Atlanta Pop Music Events</a></li><li><a href="#">New York Events</a></li><li><a href="#">Chicago Events</a></li><li><a href="#">Events in Dallas Today</a></li><li><a href="#">Los Angeles Events</a></li><li><a href="#">Washington Events</a></li>
+      </ul></div>
+      <div><h3>Connect With Us</h3><ul>
+        <li><a href="#">Contact Support</a></li><li><a href="#">Contact Sales</a></li><li><a href="#">Product Updates</a></li><li><a href="#">X</a></li><li><a href="#">Facebook</a></li><li><a href="#">LinkedIn</a></li><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li>
+      </ul></div>
+    </div>
+    <div class="ef__bottom">
+      <span class="ef__copy">&copy; <span id="efYear">2026</span> Eventbrite</span>
+      <nav class="ef__legal" aria-label="Footer">
+        <a href="#">How It Works</a><a href="#">Pricing</a><a href="#">Contact Support</a><a href="#">About</a><a href="#">Blog</a><a href="#">Help</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Impact</a><a href="#">Security</a><a href="#">Developers</a><a href="#">Status</a><a href="#">Terms</a><a href="#">Privacy</a><a href="#">Accessibility</a><a href="#">Cookies</a><a href="#">Privacy Preferences</a><a href="#" class="ef__legal-last">Do Not Sell or Share My Personal Information</a>
+      </nav>
+      <div class="ef__country">
+        <button type="button" id="efCountryBtn" aria-expanded="false"><span id="efCountryLabel">United States</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul id="efCountryMenu" class="ef__country-menu"><li>United States</li><li>India</li><li>United Kingdom</li><li>Canada</li><li>Australia</li><li>Germany</li><li>France</li><li>Spain</li></ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="event.js"></script>
+</body>
+</html>
