@@ -214,17 +214,32 @@ document.addEventListener("DOMContentLoaded", function () {
   var overlay   = $("signinOverlay");
   var openBtn   = $("openSignin");
   var closeBtn  = $("closeSignin");
+  var heroBtn   = $("heroMusicBtn");  // "Get Into Live Music" button
 
-  // Open modal
+  // Helper: open sign-in modal
+  function openSigninModal() {
+    if (!overlay) return;
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+    resetModalSteps();
+    var inp = $("mEmailInput");
+    if (inp) { inp.value = ""; inp.focus(); }
+  }
+
   if (overlay && openBtn) {
+    // "Sign in" nav button opens modal
     openBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      overlay.classList.add("open");
-      document.body.style.overflow = "hidden";
-      resetModalSteps();
-      var inp = $("mEmailInput");
-      if (inp) { inp.value = ""; inp.focus(); }
+      openSigninModal();
     });
+
+    // "Get Into Live Music" hero button also opens sign-in modal
+    if (heroBtn) {
+      heroBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        openSigninModal();
+      });
+    }
 
     // Close on X button or clicking outside the card
     if (closeBtn) closeBtn.addEventListener("click", closeSigninModal);
@@ -270,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* ============================================================
-     7. SIGN-IN STANDALONE PAGE  (signin.html)
+     7. SIGN-IN STANDALONE PAGE  (signin/index.html)
      ============================================================ */
 
   if ($("si2Card") && !overlay) {
@@ -291,7 +306,8 @@ document.addEventListener("DOMContentLoaded", function () {
       submitBtn:    $("loginSubmitBtn"),
       onSuccess: function () {
         showToast("si2Toast");
-        setTimeout(function () { window.location.href = "index.html"; }, 1800);
+        // Go back to home — works from both root signin.html and signin/index.html
+        setTimeout(function () { window.location.href = "../index.html"; }, 1800);
       }
     });
   }
