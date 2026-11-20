@@ -870,16 +870,24 @@ body.page--signin {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(10,4,20,0.60);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  /* Background image — same as the standalone signin page */
+  background-image: url('images/boston.jpg');
+  background-size: cover;
+  background-position: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s;
 }
+/* Dark overlay on top of the bg image so the card stays readable */
+.si2-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 4, 20, 0.50);
+}
 .si2-overlay.open { opacity: 1; pointer-events: auto; }
-/* Card pops in with a small animation */
-.si2-overlay .si2-card { animation: pop 0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
+/* Card must sit above the ::before dark overlay */
+.si2-overlay .si2-card { animation: pop 0.28s cubic-bezier(0.34,1.56,0.64,1) both; position: relative; z-index: 1; }
 @keyframes pop {
   from { opacity: 0; transform: scale(0.93) translateY(12px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
