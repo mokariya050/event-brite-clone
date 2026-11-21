@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
@@ -41,7 +41,33 @@
           <path fill="#6f7287"
             d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
         </svg>
-        <input type="text" id="locationInput" value="Ahmadābād" aria-label="Location">
+        <input type="text" id="locationInput" value="Ahmadābād" placeholder="Choose a location" autocomplete="off"
+          aria-label="Location" aria-haspopup="listbox">
+
+        <!-- Location dropdown -->
+        <div class="loc-menu" id="locMenu" role="listbox">
+          <button type="button" class="loc-item" id="locCurrent">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3.5" />
+              <circle cx="12" cy="12" r="7.5" />
+              <path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3" />
+            </svg>
+            <span class="loc-item__text"><span id="locCurrentText">Use my current location</span></span>
+          </button>
+
+          <button type="button" class="loc-item" id="locOnline">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="1.5" />
+              <path d="M10 9l5 3-5 3z" fill="currentColor" />
+            </svg>
+            <span class="loc-item__text"><span>Browse online events</span></span>
+          </button>
+
+          <div class="loc-sep"></div>
+          <div id="locList"></div>
+        </div>
       </div>
       <button type="submit" class="search__btn" id="searchBtn" aria-label="Search">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -63,9 +89,9 @@
 
     <!-- Nav links -->
     <nav class="nav" id="nav">
-      <a href="#" class="nav__link">Updates</a>
+      <a href="product-updates/index.html" class="nav__link">Updates</a>
       <a href="#" class="nav__link">Find Events</a>
-      <a href="#" class="nav__link nav__create">Create Events</a>
+      <a href="#" class="nav__link nav__create" id="createEventBtn">Create Events</a>
 
       <!-- Help dropdown -->
       <div class="dropdown">
@@ -128,9 +154,9 @@
 
       <div class="events-container">
 
-        <!-- Heading + tabs -->
+        <!-- Heading LEFT, tabs RIGHT -->
         <div class="top-section">
-          <h1>Discover events in <span>Ahmedabad</span> <span class="dropdown">⌄</span></h1>
+          <h1>Discover events in <span>Ahmedabad</span></h1>
           <nav class="tabs">
             <button class="tab active">All</button>
             <button class="tab">For you</button>
@@ -139,103 +165,11 @@
           </nav>
         </div>
 
-        <!-- Event cards grid -->
-        <main class="events-grid">
+        <div class="events-grid" id="eventsGrid"></div>
 
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event1.jpg" alt="Grief Gab event"></div>
-            <div class="event-heading">
-              <h2>Grief Gab | On Air: Audio-Only Grief Conversations</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Today • 7:00 PM GMT+5:30</p>
-            <p class="event-venue">Online Event</p>
-            <p class="event-price">Free</p>
-            <p class="event-promo">Promoted</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event2.jpg" alt="Event in Ahmedabad"></div>
-            <div class="event-heading">
-              <h2>Event in Ahmedabad Fun and Joy</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Mon, Dec 7 • 10:00 AM</p>
-            <p class="event-venue">Ghodasar Canal Road</p>
-            <p class="event-price">From $2.91</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event3.jpg" alt="MSME Business Summit"></div>
-            <div class="event-heading">
-              <h2>MSME Business Summit 2026 | Ahmedabad</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Sat, Dec 12 • 8:30 AM</p>
-            <p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road</p>
-            <p class="event-price">From $20.46</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event4.jpg" alt="Unleash Your Greatness"></div>
-            <div class="event-heading">
-              <h2>UNLEASH YOUR GREATNESS</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Today • 11:30 PM GMT+5:30</p>
-            <p class="event-venue">Ahmedabad</p>
-            <p class="event-price">From $268.61</p>
-            <p class="event-promo">Promoted</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event5.jpg" alt="Global Startup Summit"></div>
-            <div class="event-heading">
-              <h2>Global Startup Summit 2026 | Ahmedabad</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Sat, Dec 12 • 8:30 AM</p>
-            <p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road</p>
-            <p class="event-price">From $20.46</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event6.jpg" alt="TechAI India Summit"></div>
-            <div class="event-heading">
-              <h2>TechAI India Summit – Ahmedabad 2026</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Sat, Dec 12 • 8:30 AM</p>
-            <p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road</p>
-            <p class="event-price">From $20.46</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event7.jpg" alt="International D2C Conclave"></div>
-            <div class="event-heading">
-              <h2>International D2C Conclave 2026 | Ahmedabad</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Sat, Dec 12 • 8:30 AM</p>
-            <p class="event-venue">Welcomhotel By ITC Hotels, Ashram Road</p>
-            <p class="event-price">From $20.46</p>
-          </div>
-
-          <div class="event-card">
-            <div class="image-wrapper"><img src="images/event8.jpg" alt="EFY Expo Gujarat"></div>
-            <div class="event-heading">
-              <h2>EFY Expo Gujarat | 3-5 December 2026</h2>
-              <div class="event-actions"><button title="Share">⇧</button><button title="Favourite">♡</button></div>
-            </div>
-            <p class="event-date">Thu, Dec 3 • 10:00 AM</p>
-            <p class="event-venue">Helipad Exhibition Centre, Gate 3</p>
-            <p class="event-price">Free</p>
-          </div>
-
-        </main>
       </div>
 
-      <!-- ===== DESTINATIONS CAROUSEL ===== -->
+      <!-- Destinations: events grid ke same left edge par -->
       <section class="destinations-section">
         <div class="destinations-header">
           <h2 class="section-title">Top destinations in United States</h2>
@@ -272,7 +206,7 @@
         </div>
       </section>
 
-    </section><!-- /middle-section -->
+    </section><!-- /middle-section --><!-- /middle-section -->
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -495,7 +429,7 @@
     Logged in successfully!
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 
 </html>
